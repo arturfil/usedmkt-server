@@ -6,6 +6,7 @@ const UserModel = require('../models/user-model');
 
 const router = express.Router();
 
+// Post route for the signup
 router.post('/process-signup', (req, res, next) => {
   if(!req.body.signupFullName ||
       !req.body.signupUsername ||
@@ -58,3 +59,52 @@ router.post('/process-signup', (req, res, next) => {
       }
     );
 });
+
+// Post route for the login
+router.post('/process-login', (req, rex, next) => {
+  const customAuhtCallback =
+  passport.authenticate('local', (err, theUser, extraInfo) => {
+    if (err) {
+      res.status(500).json({ errorMessge: "Login failed "});
+      return;
+    }
+    if (!theUser) {
+      res.status(401).json({ errorMessage: extraInfo.message });
+      return;
+    }
+    req.login(theUser, (err) => {
+      if (err) {
+        res.status(500).json( {errorMessages: 'Login failed. 😈' });
+        return;
+      }
+      // clear out the password, we don't want to send it
+      theUser.encryptedPassword = undefined;
+      res.status(200).json(theUser);
+    })
+  });
+  customAuhtCallback(req, res, next);
+});
+
+// delete route for the logout
+router.delete('/logout', (req, res, next) => {
+  // req.logout is defined by passport
+  req.logout();
+  res.status(200).json({ successMessage: 'Logout success!'});
+});
+
+//get route to check if the user is in session
+router.get('/checklogin', (req, res, next) => {
+  let amILoggedIn = false;
+  if (req.user) {
+    req.user.encryptedPassword = undefined;
+    amILoggedIn = true;
+  }
+  res.status(200).json(
+    {
+      isLoggedIn: amILoggedIn,
+      userInfo: req.user
+    }
+  );
+});
+
+module.exports = router;

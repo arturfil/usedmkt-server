@@ -1,5 +1,5 @@
 const express = require('express');
-const mulet = require('multer');
+const multer = require('multer');
 const ItemModel = require('../models/item-model');
 
 const router = express.Router();
@@ -149,7 +149,7 @@ router.delete('/items/:itemId', (req, res, next) => {
   )
 })
 
-// my items route 
+// my items route
 router.get('/myitems', (req, res, next) => {
   if (!req.user) {
     res.status(401).json({ errorMessage: 'Not logged in ☠️'});

@@ -26,6 +26,7 @@ app.set('view engine', 'ejs');
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
+//middleware setup
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -48,8 +49,19 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Routes Setup
 const index = require('./routes/index');
 app.use('/', index);
+
+const myItemRouter = require('./routes/item-api-router');
+app.use('/api', myItemRouter);
+
+const myAuthRoutes = require('./routes/auth-api-router');
+app.use('/api', myAuthRoutes);
+
+app.use((req, res, next) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
