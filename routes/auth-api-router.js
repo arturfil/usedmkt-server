@@ -6,6 +6,7 @@ const UserModel = require('../models/user-model');
 
 const router = express.Router();
 
+
 // Post route for the signup
 router.post('/process-signup', (req, res, next) => {
   if(!req.body.signupFullName ||
@@ -17,7 +18,7 @@ router.post('/process-signup', (req, res, next) => {
         return;
       }
       UserModel.findOne(
-        { usernme: req.body.signupUsername },
+        { username: req.body.signupUsername },
         (err, userFromDb) => {
           if (err) {
             console.log("User find error ", err);
@@ -34,6 +35,7 @@ router.post('/process-signup', (req, res, next) => {
           const theUser = new UserModel({
             fullName: req.body.signupFullName,
             username: req.body.signupUsername,
+
             encryptedPassword: hashPass
           });
           theUser.save((err) => {
@@ -48,7 +50,7 @@ router.post('/process-signup', (req, res, next) => {
             req.login(theUser, (err) => {
               if(err) {
                 console.log("User auto-login error", err);
-                res.status(500).json({ errorMessages: "Error loggin in user"});
+                res.status(500).json({ errorMessage: "Error loggin in user"});
                 return;
               }
               //clear out the password before sending the user info
@@ -61,11 +63,11 @@ router.post('/process-signup', (req, res, next) => {
 });
 
 // Post route for the login
-router.post('/process-login', (req, rex, next) => {
+router.post('/process-login', (req, res, next) => {
   const customAuhtCallback =
   passport.authenticate('local', (err, theUser, extraInfo) => {
     if (err) {
-      res.status(500).json({ errorMessge: "Login failed "});
+      res.status(500).json({ errorMessage: "Login failed "});
       return;
     }
     if (!theUser) {
@@ -74,7 +76,7 @@ router.post('/process-login', (req, rex, next) => {
     }
     req.login(theUser, (err) => {
       if (err) {
-        res.status(500).json( {errorMessages: 'Login failed. 😈' });
+        res.status(500).json( {errorMessage: 'Login failed. 😈' });
         return;
       }
       // clear out the password, we don't want to send it
