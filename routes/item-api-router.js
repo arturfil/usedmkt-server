@@ -41,7 +41,7 @@ router.post('/items', myUploader.single('itemImage'), (req, res, next) => {
   })
 
   if (req.file) {
-    theItme.image = '/uploads/' + req.file.filename;
+    theItem.image = '/uploads/' + req.file.filename;
   }
 
   theItem.save((err) => {
