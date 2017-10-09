@@ -130,24 +130,24 @@ router.delete('/items/:itemId', (req, res, next) => {
         return;
     }
 
-    if (itemFromDb.user.toString() !== req.user._id.toStirng()) {
+    if (itemFromDb.user.toString() !== req.user._id.toString()) {
       res.status(403).json({ errorMessage: 'This item is not yours. 😼'});
       return;
     }
 
-    ItemModel.findByAndRemove(
+    ItemModel.findByIdAndRemove(
       req.params.itemId,
-      (err, itemId) => {
+      (err, itemFromDb) => {
         if (err) {
             console.log('Item delete error', err);
             res.status(500).json({ errorMessage: 'Item delete went wrong'});
           }
           res.status(200).json(itemFromDb);
         }
-      )
+      );
     }
-  )
-})
+  );
+});
 
 // my items route
 router.get('/myitems', (req, res, next) => {
