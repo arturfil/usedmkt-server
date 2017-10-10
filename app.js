@@ -59,6 +59,9 @@ app.use('/api', myItemRouter);
 const myAuthRoutes = require('./routes/auth-api-router');
 app.use('/api', myAuthRoutes);
 
+const myWalmartRouter = require('./routes/walmart-api-router');
+app.use('/api', myWalmartRouter);
+
 app.use((req, res, next) => {
   res.sendFile(__dirname + '/public/index.html');
 });
