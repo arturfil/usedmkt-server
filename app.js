@@ -9,6 +9,8 @@ const mongoose     = require('mongoose');
 const cors         = require('cors');
 const passport     = require('passport');
 const session      = require('express-session');
+const stripe      = require('stripe')('sk_test_KuORRCJSmQnyHojr9qZcU5rq');
+const exphbs       = require('express-handlebars');
 
 require('dotenv').config();
 
@@ -48,6 +50,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 // Routes Setup
 const index = require('./routes/index');
