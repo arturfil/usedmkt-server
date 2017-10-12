@@ -160,8 +160,9 @@ router.put('/items/auction/:itemId', (req, res, next) => {                      
         return;
       }
       itemFromDb.set({
-        status: true,
-        auctionVal: value * .20
+        status: true, // I just want to set to true when clicked | should I run a function to check if it has allready been clicked? if ... () {} etc?
+        auctionVal: itemFromDb.value * .50  //
+        // finalDate: // todays Date + 24
       });
       itemFromDb.save((err) => {
         if (itemFromDb.errors) {
@@ -174,6 +175,37 @@ router.put('/items/auction/:itemId', (req, res, next) => {                      
         if (err) {
           console.log('Item update ERROR', err);
           res.status(500).json({ errorMessage: 'Item update went wrong'});
+          return;
+        }
+        res.status(200).json(itemFromDb);
+      });
+    }
+  )
+});
+
+// PUT/items/bid/:itemId
+router.put('/items/bid/:itemId', (req, res, next) => {
+  ItemModle.findById(
+    req.params.itemId,
+    (err, itemFromDb) => {
+      if (err) {
+        console.log("Error, couldn't submit the bidding");
+        res.status(500).json({ errorMessages: "Item details went wrong"});
+        return;
+      }
+      itemFromDb.set({
+        if (currentBid > auctionVal) {
+          auctionVal = currentBid;
+        } else {
+          auctionVal = auctionVal;
+        }
+      });
+      itemFromDb.save((err) => {
+        if (itemFromDb.errors) {
+          res.status(400).json({
+            errorMessage: 'Bid Submission Validation failed',
+            validationErrors: itemFromDb.errors
+          });
           return;
         }
         res.status(200).json(itemFromDb);

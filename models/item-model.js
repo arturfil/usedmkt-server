@@ -37,6 +37,9 @@ const itemSchema = new Schema({
   },
   auctionTime: {
     type: Number
+  },
+  finalDate: {
+    type: Date
   }
 });
 
