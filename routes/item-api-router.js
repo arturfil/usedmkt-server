@@ -68,7 +68,7 @@ router.get('/items/:itemId', (req, res, next) => {
     (err, itemFromDb) => {
       if (err) {
         console.log("Item details ERROR");
-        res.status(500).json({ errorMessages: 'Item details went wrong 👹'});
+        res.status(500).json({ errorMessage: 'Item details went wrong 👹'});
         return;
       }
       res.status(200).json(itemFromDb);
@@ -76,14 +76,14 @@ router.get('/items/:itemId', (req, res, next) => {
   );
 });
 
-// PUT/api/phones/ID
+// PUT/api/items/ID
 router.put('/items/:itemId', (req, res, next) => {
   ItemModel.findById(
     req.params.itemId,
     (err, itemFromDb) => {
       if (err) {
         console.log('Phone details ERROR', err);
-        res.status(500).json({ errorMessages: 'Phone details went wrong 👽'});
+        res.status(500).json({ errorMessage: 'Item details went wrong 👽'});
         return;
       }
       itemFromDb.set({
@@ -93,7 +93,7 @@ router.put('/items/:itemId', (req, res, next) => {
         value: req.body.value
       });
 
-      itemFromDb.dave((err) => {
+      itemFromDb.save((err) => {
         if (itemFromDb.errors) {
           res.status(400).json({
             errorMessage: "Update validation failed 😭",
@@ -147,6 +147,39 @@ router.delete('/items/:itemId', (req, res, next) => {
       );
     }
   );
+});
+
+// PUT/items/auction/:itemId
+router.put('/items/auction/:itemId', (req, res, next) => {                         //<= this is meant to change the 'auction status of the item'
+  ItemModel.findById(
+    req.params.itemId,
+    (err, itemFromDb) => {
+      if (err) {
+        console.log("Error, the item couldn't be updated");
+        res.status(500).json({ errorMessage: "Item details went wrong "});
+        return;
+      }
+      itemFromDb.set({
+        status: true,
+        auctionVal: value * .20
+      });
+      itemFromDb.save((err) => {
+        if (itemFromDb.errors) {
+          res.status(400).json({
+            errorMessage: "Update validation failed ",
+            validationErrors: itemFromDb.errors
+          });
+          return;
+        }
+        if (err) {
+          console.log('Item update ERROR', err);
+          res.status(500).json({ errorMessage: 'Item update went wrong'});
+          return;
+        }
+        res.status(200).json(itemFromDb);
+      });
+    }
+  )
 });
 
 // my items route

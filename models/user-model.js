@@ -14,8 +14,14 @@ const userSchema = new Schema(
     encryptedPassword: {
       type: String,
       required: [true, 'Password is required']
+    },
+    credits: {
+      type: Number,
+      default: 0
     }
   },
+
+
   {
     timestamps: true
   }

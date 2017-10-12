@@ -21,6 +21,22 @@ const itemSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  status: {
+    type: Boolean
+  },
+  auctionVal: {
+    type: Number
+  },
+  currentBid: {
+    type: Number
+  },
+  currentBidder: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  auctionTime: {
+    type: Number
   }
 });
 
