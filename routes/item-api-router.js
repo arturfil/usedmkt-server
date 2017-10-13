@@ -168,6 +168,10 @@ router.put('/items/auction/:itemId', (req, res, next) => {
         return;
 
       }
+      if(itemFromDb.user.toString() !== req.user._id.toString()) {
+        res.status(400).json({ errorMessage: "The user is not the owner of the item"})
+        return;
+      }
 
       itemFromDb.set({
         status: true, // I just want to set to true when clicked | should I run a function to check if it has allready been clicked? if ... () {} etc?
