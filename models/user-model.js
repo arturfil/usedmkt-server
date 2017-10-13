@@ -17,7 +17,7 @@ const userSchema = new Schema(
     },
     credits: {
       type: Number,
-      default: 0
+      default: 300
     }
   },
 
@@ -27,5 +27,5 @@ const userSchema = new Schema(
   }
 );
 
-const UserModel = mongoose.model('Uber', userSchema);
+const UserModel = mongoose.model('User', userSchema);
 module.exports = UserModel;

@@ -150,7 +150,10 @@ router.delete('/items/:itemId', (req, res, next) => {
 });
 
 // PUT/items/auction/:itemId
-router.put('/items/auction/:itemId', (req, res, next) => {                         //<= this is meant to change the 'auction status of the item'
+router.put('/items/auction/:itemId', (req, res, next) => {
+  var new_today = new Date();
+  var new_tomorrow = new Date(new_today.getTime() + (24 * 60 * 60 * 1000));
+                        //<= this is meant to change the 'auction status of the item'
   ItemModel.findById(
     req.params.itemId,
     (err, itemFromDb) => {
@@ -159,10 +162,17 @@ router.put('/items/auction/:itemId', (req, res, next) => {                      
         res.status(500).json({ errorMessage: "Item details went wrong "});
         return;
       }
+
+      if(itemFromDb.status) {
+        res.status(400).json({ errorMessage: "The Item was allready in an auction" })
+        return;
+
+      }
+
       itemFromDb.set({
         status: true, // I just want to set to true when clicked | should I run a function to check if it has allready been clicked? if ... () {} etc?
-        auctionVal: itemFromDb.value * .50  //
-        // finalDate: // todays Date + 24
+        auctionVal: itemFromDb.value * .50,  //
+        finalDate: new_tomorrow
       });
       itemFromDb.save((err) => {
         if (itemFromDb.errors) {
@@ -185,30 +195,51 @@ router.put('/items/auction/:itemId', (req, res, next) => {                      
 
 // PUT/items/bid/:itemId
 router.put('/items/bid/:itemId', (req, res, next) => {
-  ItemModle.findById(
+  // var bidAmount = req.body.bidAmount;
+  if (req.body.bidAmount > req.user.credits) {
+    res.status(400).json({errorMessage: "Not enough credits"});
+    return;
+  }
+  ItemModel.findById(
     req.params.itemId,
     (err, itemFromDb) => {
       if (err) {
         console.log("Error, couldn't submit the bidding");
-        res.status(500).json({ errorMessages: "Item details went wrong"});
+        res.status(500).json({ errorMessage: "Item details went wrong"});
+        return;
+      }
+      if (req.body.bidAmount < itemFromDb.auctionVal) {
+        res.status(400).json({errorMessage: "Current bid is not a valid bid"})
         return;
       }
       itemFromDb.set({
-        if (currentBid > auctionVal) {
-          auctionVal = currentBid;
-        } else {
-          auctionVal = auctionVal;
-        }
+      auctionVal: req.body.bidAmount
       });
       itemFromDb.save((err) => {
         if (itemFromDb.errors) {
           res.status(400).json({
-            errorMessage: 'Bid Submission Validation failed',
+            errorMessage: 'Bid Submission Saving failed',
             validationErrors: itemFromDb.errors
           });
           return;
         }
-        res.status(200).json(itemFromDb);
+        if(err) {
+          console.log("Bid update Error", err);
+          res.status(500).json({ errorMessage: 'Item update went wrong'});
+          return;
+        }
+        req.user.set({
+          credits: req.user.credits - req.body.bidAmount
+        });
+        req.user.save((err) => {
+          if(err) {
+            console.log(err);
+            console.log("User credits saving error");
+            res.status(500).json({ errorMessage: 'User Credits went wrong'})
+            return;
+          }
+          res.status(200).json(itemFromDb);
+        })
       });
     }
   )
