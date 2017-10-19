@@ -5,7 +5,7 @@ let getUrl;
 
 if (process.env.NODE_ENV === 'production') {
   const multerS3 = require('multer-s3');
-  const aws = requrie('aws-sdk');
+  const aws = require('aws-sdk');
 
   const s3 =
     new aws.S3(
