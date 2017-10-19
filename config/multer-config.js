@@ -3,7 +3,7 @@ const multer = require('multer');
 let myUploader;
 let getUrl;
 
-if (procces.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   const multerS3 = require('multer-s3');
   const aws = requrie('aws-sdk');
 
@@ -51,5 +51,5 @@ myUploader =
 
 module.exports = {
   uploader: myUploader,
-  getUrl: gerUrl
+  getUrl: getUrl
 }
