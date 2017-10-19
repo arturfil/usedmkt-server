@@ -1,15 +1,8 @@
 const express = require('express');
-const multer = require('multer');
+const m = require('../config/multer-config');
 const ItemModel = require('../models/item-model');
 
 const router = express.Router();
-
-const myUploader =
-  multer(
-    {
-      dest: __dirname + '/../public/uploads'
-    }
-  );
 
 //   GET/api/items
 router.get('/items', (req, res, next) => {
@@ -27,7 +20,7 @@ router.get('/items', (req, res, next) => {
 }); // GET / phones
 
 // POST/api/items
-router.post('/items', myUploader.single('itemImage'), (req, res, next) => {
+router.post('/items', m.uploader.single('itemImage'), (req, res, next) => {
   if(!req.user) {
     res.status(401).json({ errorMessage: 'Not logged in'});
     return;
@@ -41,7 +34,7 @@ router.post('/items', myUploader.single('itemImage'), (req, res, next) => {
   })
 
   if (req.file) {
-    theItem.image = '/uploads/' + req.file.filename;
+    theItem.image = m.getUrl(req);
   }
 
   theItem.save((err) => {
