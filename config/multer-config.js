@@ -3,7 +3,7 @@ const multer = require('multer');
 let myUploader;
 let getUrl;
 
-if (procces.env.NODE_ENV === 'production');
+if (procces.env.NODE_ENV === 'production') {
   const multerS3 = require('multer-s3');
   const aws = requrie('aws-sdk');
 
@@ -28,4 +28,28 @@ myUploader =
           }
         )
     }
-  )
+  );
+
+  getUrl = function getUrl (request) {
+    return request.file.location;
+  }
+
+} else {
+
+  myUploader =
+    multer(
+      {
+        dest: __dirname + '/../public/uploads'
+      }
+    );
+
+    getUrl = function getUrl(request) {
+      return '/uploads/' + request.file.filename;
+    };
+
+}
+
+module.exports = {
+  uploader: myUploader,
+  getUrl: gerUrl
+}
