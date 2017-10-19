@@ -22,8 +22,8 @@ myUploader =
         multerS3(
           {
             s3: s3,
-            bucket: process.env.AWS_BUCKET,
-            contentType: multerS3.usedmkt,
+            bucket: process.env.usedmtk,
+            contentType: multerS3.AUTO_CONTENT_TYPE,
             acl: 'public-read'
           }
         )
