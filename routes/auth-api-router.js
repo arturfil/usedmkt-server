@@ -64,7 +64,7 @@ router.post('/process-signup', (req, res, next) => {
 
 // Post route for the login
 router.post('/process-login', (req, res, next) => {
-  const customAuhtCallback =
+  const customAuthCallback =
   passport.authenticate('local', (err, theUser, extraInfo) => {
     if (err) {
       res.status(500).json({ errorMessage: "Login failed "});
@@ -84,7 +84,7 @@ router.post('/process-login', (req, res, next) => {
       res.status(200).json(theUser);
     })
   });
-  customAuhtCallback(req, res, next);
+  customAuthCallback(req, res, next);
 });
 
 // delete route for the logout
